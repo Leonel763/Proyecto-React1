@@ -1,75 +1,78 @@
-# Repositorio base del Curso de Introducción a React.js en Platzi
+# React Personal
 
-¡Hola, Platzinauta!
+Proyecto sencillo hecho con React para practicar lo mas importante del curso: componentes, estados, formularios, listas, renderizado dinamico y consumo de APIs.
 
-En este repositorio encontrarás el código de todas las clases del [Curso de Introducción a React.js](https://platzi.com/reactjs). Para empezar solo debes clonar este repositorio (`git clone`), instalar sus dependencias (`npm i`) y ejecutar la aplicación (`npm start`).
+## Que hace la app
 
-La rama principal contiene el código con el que eempezamos el curso. En las demás ramas encontrarás el código de las siguientes clases y finalmente el deploy de la aplicación.
+- Tiene un login simple para entrar con nombre, correo y password.
+- Permite crear un horario personal con dia, hora, categoria y actividad.
+- Permite marcar actividades como completadas o eliminarlas.
+- Consume APIs publicas para mostrar el clima de Lima y el cambio referencial del dolar.
+- Genera un reporte con tu avance y lo envia automaticamente con EmailJS.
 
-¡Mucha suerte aprendiendo React! #NuncaParesDeAprender
+## Que se hizo en React
 
-## Getting Started with Create React App
+La pantalla se divide en partes visuales, pero la logica principal esta en `src/App.js`.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- `useState` guarda datos que cambian: usuario, formulario, horario, clima, dolar y reporte.
+- `useEffect` ejecuta las llamadas a las APIs cuando carga la app.
+- `map` pinta la lista de actividades desde un arreglo.
+- Los formularios son controlados: cada input cambia un estado.
+- Cuando agregas, completas o borras una actividad, React vuelve a pintar la interfaz automaticamente.
+- La carpeta `src/Componentes` separa la pantalla en componentes reutilizables.
 
-## Available Scripts
+## Envio automatico de correo
 
-In the project directory, you can run:
+El boton de reporte usa EmailJS. Esto permite enviar correos desde React sin abrir Gmail u Outlook.
 
-### `npm start`
+Primero crea una cuenta en EmailJS y consigue estos datos:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Service ID
+- Template ID
+- Public Key
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Copia el archivo `.env.example` y crea un archivo nuevo llamado `.env`:
 
-### `npm run build`
+```bash
+REACT_APP_EMAILJS_SERVICE_ID=tu_service_id
+REACT_APP_EMAILJS_TEMPLATE_ID=tu_template_id
+REACT_APP_EMAILJS_PUBLIC_KEY=tu_public_key
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+En tu plantilla de EmailJS usa estas variables:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```text
+{{to_email}}
+{{to_name}}
+{{report_message}}
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Despues de cambiar el archivo `.env`, detén el servidor y vuelve a ejecutar `npm start`.
 
-### `npm run eject`
+Nota: la Public Key de EmailJS esta pensada para usarse en el frontend. No coloques claves privadas ni passwords reales dentro de React.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Como ejecutarlo
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Instala las dependencias si aun no estan instaladas:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Ejecuta el proyecto:
 
-## Learn More
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Abre:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```text
+http://localhost:3000
+```
 
-### Code Splitting
+Para verificar que compila:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm run build
+```
