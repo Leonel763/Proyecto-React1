@@ -2,8 +2,7 @@ function BandaAprendizaje() {
   return (
     <section className="learning-band">
       <div>
-        <p className="eyebrow">Que hace React aqui</p>
-        <h2>React separa la pantalla en piezas pequenas.</h2>
+        <p className="eyebrow">Funciones:</p>
       </div>
       <p>
         El login, el formulario, la lista, las tarjetas de APIs y el reporte usan estados. Cuando

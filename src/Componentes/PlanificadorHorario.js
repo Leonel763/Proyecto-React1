@@ -66,7 +66,7 @@ function PlanificadorHorario({
             onChange={(evento) =>
               onCambiarActividad({ ...nuevaActividad, titulo: evento.target.value })
             }
-            placeholder="Ejemplo: estudiar useState"
+            placeholder="Describe tu actividad"
           />
         </label>
 

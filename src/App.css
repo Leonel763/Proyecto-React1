@@ -39,9 +39,9 @@ button {
 }
 
 .login-panel {
-  width: min(980px, 100%); /* Permite que el panel sea ancho para que quepan ambos elementos */
+  width: min(980px, 100%); 
   display: grid;
-  grid-template-columns: 1fr 380px; /* 1fr para la imagen, 380px para el formulario */
+  grid-template-columns: 1fr 380px; 
   gap: 34px;
   align-items: center;
   padding: 34px;
@@ -78,7 +78,7 @@ button {
   text-align: left;
 }
 
-/* Solo el texto "Login" del formulario de entrada */
+
 .login-form .eyebrow {
   text-align: center;
 }
@@ -381,7 +381,7 @@ nav {
 .learning-band {
   width: min(1180px, calc(100% - 32px));
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
+  grid-template-columns: 0.1fr 1.2fr;
   gap: 26px;
   align-items: center;
   margin: 0 auto 48px;
