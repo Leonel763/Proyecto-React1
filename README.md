@@ -40,15 +40,6 @@ Los nombres del codigo estan en español para que sea mas facil leerlo:
 El boton de reporte usa EmailJS. Esto permite enviar correos desde React sin abrir Gmail u Outlook.
 
 Primero crea una cuenta en EmailJS y consigue estos datos:
-
 - Service ID
 - Template ID
 - Public Key
-
-
-
-Para verificar que compila:
-
-```bash
-npm run build
-```
