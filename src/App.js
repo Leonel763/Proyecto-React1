@@ -1,196 +1,205 @@
 import { useEffect, useMemo, useState } from 'react';
-import {ApiCards} from './Componentes/ApiCards';
-import {DashboardHero} from './Componentes/DashboardHero';
-import {LearningBand} from './Componentes/LearningBand';
-import {LoginScreen} from './Componentes/LoginScreen';
-import {ReportPanel} from './Componentes/ReportPanel';
-import {SchedulePlanner} from './Componentes/SchedulePlanner';
-import { initialSchedule } from './data/initialSchedule';
-import { sendReportEmail } from './services/emailService';
+import {
+  BandaAprendizaje,
+  EncabezadoPanel,
+  PanelReporte,
+  PantallaLogin,
+  PlanificadorHorario,
+  TarjetasApis,
+} from './Componentes';
+import { horarioInicial } from './data/horarioInicial';
+import { enviarReportePorCorreo } from './ServicioEmail/servicioCorreo';
 import './App.css';
 
-
 function App() {
-  const [user, setUser] = useState(null);
-  const [loginForm, setLoginForm] = useState({
-    name: '',
-    email: '',
+  const [usuario, setUsuario] = useState(null);
+  const [formularioLogin, setFormularioLogin] = useState({
+    nombre: '',
+    correo: '',
     password: '',
   });
-  const [schedule, setSchedule] = useState(initialSchedule);
-  const [newActivity, setNewActivity] = useState({
-    day: 'Lunes',
-    time: '09:00',
-    title: '',
-    category: 'Estudio',
+  const [horario, setHorario] = useState(horarioInicial);
+  const [nuevaActividad, setNuevaActividad] = useState({
+    dia: 'Lunes',
+    hora: '09:00',
+    titulo: '',
+    categoria: 'Estudio',
   });
-  const [weather, setWeather] = useState(null);
-  const [dollar, setDollar] = useState(null);
-  const [apiError, setApiError] = useState('');
-  const [reportStatus, setReportStatus] = useState({
-    type: '',
-    message: '',
+  const [clima, setClima] = useState(null);
+  const [dolar, setDolar] = useState(null);
+  const [errorApis, setErrorApis] = useState('');
+  const [estadoReporte, setEstadoReporte] = useState({
+    tipo: '',
+    mensaje: '',
   });
 
   useEffect(() => {
-    async function loadApiData() {
+    async function cargarDatosApis() {
       try {
-        setApiError('');
+        setErrorApis('');
 
-        const [weatherResponse, dollarResponse] = await Promise.all([
+        const [respuestaClima, respuestaDolar] = await Promise.all([
           fetch(
             'https://api.open-meteo.com/v1/forecast?latitude=-12.06&longitude=-77.04&current=temperature_2m,relative_humidity_2m,wind_speed_10m'
           ),
           fetch('https://open.er-api.com/v6/latest/USD'),
         ]);
 
-        if (!weatherResponse.ok || !dollarResponse.ok) {
+        if (!respuestaClima.ok || !respuestaDolar.ok) {
           throw new Error('No se pudo cargar la informacion externa.');
         }
 
-        const weatherData = await weatherResponse.json();
-        const dollarData = await dollarResponse.json();
+        const datosClima = await respuestaClima.json();
+        const datosDolar = await respuestaDolar.json();
 
-        setWeather(weatherData.current);
-        setDollar({
-          pen: dollarData.rates.PEN,
-          eur: dollarData.rates.EUR,
-          updated: dollarData.time_last_update_utc,
+        setClima(datosClima.current);
+        setDolar({
+          pen: datosDolar.rates.PEN,
+          eur: datosDolar.rates.EUR,
+          actualizado: datosDolar.time_last_update_utc,
         });
       } catch (error) {
-        setApiError('Las APIs no respondieron ahora. Intenta otra vez en unos minutos.');
+        setErrorApis('Las APIs no respondieron ahora. Intenta otra vez en unos minutos.');
       }
     }
 
-    loadApiData();
+    cargarDatosApis();
   }, []);
 
-  const completedActivities = schedule.filter((activity) => activity.done).length;
+  const actividadesCompletadas = horario.filter((actividad) => actividad.completada).length;
 
-  const report = useMemo(() => {
-    const pending = schedule.length - completedActivities;
+  const reporte = useMemo(() => {
+    const actividadesPendientes = horario.length - actividadesCompletadas;
 
     return [
-      `Reporte personal de ${user?.name || 'estudiante'}`,
-      `Actividades registradas: ${schedule.length}`,
-      `Actividades completadas: ${completedActivities}`,
-      `Actividades pendientes: ${pending}`,
-      weather
-        ? `Clima actual en Lima: ${weather.temperature_2m} C, humedad ${weather.relative_humidity_2m}%.`
+      `Reporte personal de ${usuario?.nombre || 'estudiante'}`,
+      `Actividades registradas: ${horario.length}`,
+      `Actividades completadas: ${actividadesCompletadas}`,
+      `Actividades pendientes: ${actividadesPendientes}`,
+      clima
+        ? `Clima actual en Lima: ${clima.temperature_2m} C, humedad ${clima.relative_humidity_2m}%.`
         : 'Clima actual: pendiente de cargar.',
-      dollar
-        ? `Cambio referencial: 1 USD = ${dollar.pen.toFixed(2)} PEN.`
+      dolar
+        ? `Cambio referencial: 1 USD = ${dolar.pen.toFixed(2)} PEN.`
         : 'Cambio de dolar: pendiente de cargar.',
     ].join('\n');
-  }, [completedActivities, dollar, schedule.length, user?.name, weather]);
+  }, [actividadesCompletadas, clima, dolar, horario.length, usuario?.nombre]);
 
-  function handleLogin(event) {
-    event.preventDefault();
+  function iniciarSesion(evento) {
+    evento.preventDefault();
 
-    if (!loginForm.name || !loginForm.email || !loginForm.password) {
+    if (!formularioLogin.nombre || !formularioLogin.correo || !formularioLogin.password) {
       return;
     }
 
-    setUser({
-      name: loginForm.name,
-      email: loginForm.email,
+    setUsuario({
+      nombre: formularioLogin.nombre,
+      correo: formularioLogin.correo,
     });
   }
 
-  function handleAddActivity(event) {
-    event.preventDefault();
+  function agregarActividad(evento) {
+    evento.preventDefault();
 
-    if (!newActivity.title.trim()) {
+    if (!nuevaActividad.titulo.trim()) {
       return;
     }
 
-    setSchedule([
-      ...schedule,
+    setHorario([
+      ...horario,
       {
         id: Date.now(),
-        ...newActivity,
-        title: newActivity.title.trim(),
-        done: false,
+        ...nuevaActividad,
+        titulo: nuevaActividad.titulo.trim(),
+        completada: false,
       },
     ]);
 
-    setNewActivity({
-      day: 'Lunes',
-      time: '09:00',
-      title: '',
-      category: 'Estudio',
+    setNuevaActividad({
+      dia: 'Lunes',
+      hora: '09:00',
+      titulo: '',
+      categoria: 'Estudio',
     });
   }
 
-  function toggleActivity(id) {
-    setSchedule(
-      schedule.map((activity) =>
-        activity.id === id ? { ...activity, done: !activity.done } : activity
+  function cambiarEstadoActividad(id) {
+    setHorario(
+      horario.map((actividad) =>
+        actividad.id === id ? { ...actividad, completada: !actividad.completada } : actividad
       )
     );
   }
 
-  function deleteActivity(id) {
-    setSchedule(schedule.filter((activity) => activity.id !== id));
+  function eliminarActividad(id) {
+    setHorario(horario.filter((actividad) => actividad.id !== id));
   }
 
-  async function handleSendReport() {
+  async function enviarReporte() {
     try {
-      setReportStatus({
-        type: 'loading',
-        message: 'Enviando reporte...',
+      setEstadoReporte({
+        tipo: 'cargando',
+        mensaje: 'Enviando reporte...',
       });
 
-      await sendReportEmail({
-        email: user.email,
-        name: user.name,
-        report,
+      await enviarReportePorCorreo({
+        correo: usuario.correo,
+        nombre: usuario.nombre,
+        reporte,
       });
 
-      setReportStatus({
-        type: 'success',
-        message: 'Reporte enviado automaticamente al correo.',
+      setEstadoReporte({
+        tipo: 'exito',
+        mensaje: 'Reporte enviado automaticamente al correo.',
       });
     } catch (error) {
-      setReportStatus({
-        type: 'error',
-        message: error.message,
+      setEstadoReporte({
+        tipo: 'error',
+        mensaje: error.message,
       });
     }
   }
 
-  if (!user) {
+  if (!usuario) {
     return (
-      <LoginScreen form={loginForm} onFormChange={setLoginForm} onLogin={handleLogin} />
+      <PantallaLogin
+        formulario={formularioLogin}
+        onCambiarFormulario={setFormularioLogin}
+        onIniciarSesion={iniciarSesion}
+      />
     );
   }
 
   return (
     <main className="app-shell">
-      <DashboardHero
-        user={user}
-        totalActivities={schedule.length}
-        completedActivities={completedActivities}
-        onLogout={() => setUser(null)}
+      <EncabezadoPanel
+        usuario={usuario}
+        totalActividades={horario.length}
+        actividadesCompletadas={actividadesCompletadas}
+        onCerrarSesion={() => setUsuario(null)}
       />
 
       <section className="content-grid">
-        <SchedulePlanner
-          newActivity={newActivity}
-          schedule={schedule}
-          onActivityChange={setNewActivity}
-          onAddActivity={handleAddActivity}
-          onDeleteActivity={deleteActivity}
-          onToggleActivity={toggleActivity}
+        <PlanificadorHorario
+          nuevaActividad={nuevaActividad}
+          horario={horario}
+          onCambiarActividad={setNuevaActividad}
+          onAgregarActividad={agregarActividad}
+          onEliminarActividad={eliminarActividad}
+          onCambiarEstadoActividad={cambiarEstadoActividad}
         />
 
         <aside className="side-column">
-          <ApiCards apiError={apiError} dollar={dollar} weather={weather} />
-          <ReportPanel report={report} reportStatus={reportStatus} onSendReport={handleSendReport} />
+          <TarjetasApis errorApis={errorApis} dolar={dolar} clima={clima} />
+          <PanelReporte
+            reporte={reporte}
+            estadoReporte={estadoReporte}
+            onEnviarReporte={enviarReporte}
+          />
         </aside>
       </section>
 
-      <LearningBand />
+      <BandaAprendizaje />
     </main>
   );
 }

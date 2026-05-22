@@ -1,5 +1,6 @@
-export { ApiCards } from './ApiCards';
-export { DashboardHero } from './DashboardHero';
-export { LoginScreen } from './LoginScreen';
-export { ReportPanel } from './ReportPanel';
-export { SchedulePlanner } from './SchedulePlanner';
+export { BandaAprendizaje } from './BandaAprendizaje';
+export { EncabezadoPanel } from './EncabezadoPanel';
+export { PanelReporte } from './PanelReporte';
+export { PantallaLogin } from './PantallaLogin';
+export { PlanificadorHorario } from './PlanificadorHorario';
+export { TarjetasApis } from './TarjetasApis';

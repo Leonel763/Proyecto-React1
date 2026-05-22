@@ -21,6 +21,20 @@ La pantalla se divide en partes visuales, pero la logica principal esta en `src/
 - Cuando agregas, completas o borras una actividad, React vuelve a pintar la interfaz automaticamente.
 - La carpeta `src/Componentes` separa la pantalla en componentes reutilizables.
 
+## Como esta dividido ahora
+
+Los nombres del codigo estan en español para que sea mas facil leerlo:
+
+- `App.js`: controla la logica principal de la app.
+- `PantallaLogin.js`: muestra el formulario para iniciar sesion.
+- `EncabezadoPanel.js`: muestra el saludo y los contadores.
+- `PlanificadorHorario.js`: permite crear, completar y eliminar actividades.
+- `TarjetasApis.js`: muestra el clima y el cambio del dolar.
+- `PanelReporte.js`: muestra el reporte y el boton para enviarlo.
+- `BandaAprendizaje.js`: muestra una explicacion corta de React.
+- `horarioInicial.js`: guarda las actividades iniciales.
+- `servicioCorreo.js`: contiene la funcion que envia el reporte con EmailJS.
+
 ## Envio automatico de correo
 
 El boton de reporte usa EmailJS. Esto permite enviar correos desde React sin abrir Gmail u Outlook.

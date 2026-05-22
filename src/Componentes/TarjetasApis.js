@@ -1,4 +1,4 @@
-function ApiCards({ apiError, dollar, weather }) {
+function TarjetasApis({ errorApis, dolar, clima }) {
   return (
     <article className="panel">
       <div className="section-heading">
@@ -8,22 +8,22 @@ function ApiCards({ apiError, dollar, weather }) {
         </div>
       </div>
 
-      {apiError && <p className="error-message">{apiError}</p>}
+      {errorApis && <p className="error-message">{errorApis}</p>}
 
       <div className="api-cards">
         <div>
           <span>Clima Lima</span>
-          <strong>{weather ? `${weather.temperature_2m} C` : 'Cargando...'}</strong>
-          <p>{weather ? `Humedad ${weather.relative_humidity_2m}%` : 'Open-Meteo API'}</p>
+          <strong>{clima ? `${clima.temperature_2m} C` : 'Cargando...'}</strong>
+          <p>{clima ? `Humedad ${clima.relative_humidity_2m}%` : 'Open-Meteo API'}</p>
         </div>
 
         <div>
           <span>Dolar</span>
-          <strong>{dollar ? `S/ ${dollar.pen.toFixed(2)}` : 'Cargando...'}</strong>
+          <strong>{dolar ? `S/ ${dolar.pen.toFixed(2)}` : 'Cargando...'}</strong>
         </div>
       </div>
     </article>
   );
 }
 
-export { ApiCards };
+export { TarjetasApis };

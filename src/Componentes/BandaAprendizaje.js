@@ -1,4 +1,4 @@
-function LearningBand() {
+function BandaAprendizaje() {
   return (
     <section className="learning-band">
       <div>
@@ -13,4 +13,4 @@ function LearningBand() {
   );
 }
 
-export { LearningBand };
+export { BandaAprendizaje };
